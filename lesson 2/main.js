@@ -1,7 +1,14 @@
 (function() {
     "use strict";
+    for(let i = 0; i < 1;) {
+        let userBudget = +prompt("Ваш бюджет на месяц?", "");
+        if(userBudget != null && userBudget != '') {
+            i++;
+        } else {
+            alert("Введите корректные данные");
+        }
+    }
 
-    let userBudget = +prompt("Ваш бюджет на месяц?", "");
     let userData = prompt("Введите дату в формате YYYY-MM-DD", "");
 
     let appData = {
@@ -21,7 +28,7 @@
             appData.expenses[costItem] = sum;
             i++;
         } else {
-            alert("Введите корректные данные")
+            alert("Введите корректные данные");
         }
     }
     // let count = 2;
