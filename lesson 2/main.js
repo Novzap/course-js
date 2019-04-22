@@ -1,7 +1,8 @@
 (function() {
     "use strict";
+    let userBudget;
     for(let i = 0; i < 1;) {
-        let userBudget = +prompt("Ваш бюджет на месяц?", "");
+        userBudget = +prompt("Ваш бюджет на месяц?", "");
         if(userBudget != null && userBudget != '') {
             i++;
         } else {
@@ -23,7 +24,7 @@
     for(let i = 0; i < 2;) {
         let costItem = prompt("Введите обязательную статью расходов в этом месяце", "");
         let sum = +prompt("Во сколько обойдётся?", "");
-        if( (typeof(costItem)) === 'string' && (typeof(costItem)) !=null && (typeof(sum)) !=null && costItem != '' && sum != '' && costItem.length < 50) {
+        if( (typeof(costItem)) === 'string' && costItem !=null && sum !=null && costItem != '' && sum != '' && costItem.length < 50) {
             console.log("done");
             appData.expenses[costItem] = sum;
             i++;
@@ -35,7 +36,7 @@
     // while(count) {
     //     let costItem = prompt("Введите обязательную статью расходов в этом месяце", "");
     //     let sum = +prompt("Во сколько обойдётся?", "");
-    //     if( (typeof(costItem)) === 'string' && (typeof(costItem)) !=null && (typeof(sum)) !=null && costItem != '' && sum != '' && costItem.length < 50) {
+    //     if( (typeof(costItem)) === 'string' && costItem !=null && sum !=null && costItem != '' && sum != '' && costItem.length < 50) {
     //         console.log("done");
     //         appData.expenses[costItem] = sum;
     //         count--;
@@ -48,7 +49,7 @@
     // do {
     //     let costItem = prompt("Введите обязательную статью расходов в этом месяце", "");
     //     let sum = +prompt("Во сколько обойдётся?", "");
-    //     if( (typeof(costItem)) === 'string' && (typeof(costItem)) !=null && (typeof(sum)) !=null && costItem != '' && sum != '' && costItem.length < 50) {
+    //     if( (typeof(costItem)) === 'string' && costItem !=null && sum !=null && costItem != '' && sum != '' && costItem.length < 50) {
     //         console.log("done");
     //         appData.expenses[costItem] = sum;
     //         count2--;
