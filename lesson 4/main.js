@@ -1,5 +1,4 @@
-
-
+(function() {
     "use strict";
     let userBudget,
         userData;
@@ -63,10 +62,10 @@
             }
         },
         chooceIncome: () => {
-                let items;
-                while(items == '' || items == null || !isNaN(items) || items === undefined) {
-                    items = prompt("Что принесёт дополнительный доход? (перечислите через запятую)", "");
-                }    
+            let items;
+            while(items == '' || items == null || !isNaN(items) || items === undefined) {
+                items = prompt("Что принесёт дополнительный доход? (перечислите через запятую)", "");
+            }    
             appData.income = items.split(', ');
             appData.income.push(prompt("Может что-то ещё? ", ""));
             appData.income.sort();
@@ -82,3 +81,4 @@
     alert("Наша программа включает в себя данные:\n" + all);
 
     console.log(appData); // Вывод объекта в консоль для проверки
+})();
