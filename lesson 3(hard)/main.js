@@ -4,7 +4,7 @@ str = str[0].toLocaleUpperCase() + str.slice(1);
 str = str.replace(/-/g, ' ');
 console.log(str);
 
- str = str.slice(0,18).replace('ом', 'оо');
+ str = str.slice(-6).replace('им', 'оо');
 
 console.log(str);
 
