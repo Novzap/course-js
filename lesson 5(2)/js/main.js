@@ -1,0 +1,13 @@
+let calculation = document.querySelector('#start');
+let values = document.querySelector('.result-table');
+let expensis = document.querySelectorAll('.expenses-item');
+let approve1 = document.querySelector('.data button');
+let approve2 = document.querySelectorAll('.data button')[1];
+let approve3 = document.querySelectorAll('.data button')[2];
+let optionalExpensis = document.querySelectorAll('.optionalexpensis-item');
+let chooseIncomeInput = document.querySelector('.choose-income');
+let sumInput = document.querySelector('#sum');
+let percentInput = document.querySelector('#percent');
+let yearInput = document.querySelector('.year-value');
+let monthInput = document.querySelector('.month-value');
+let dayInput = document.querySelector('.day-value');
