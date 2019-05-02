@@ -35,7 +35,7 @@ calculation.addEventListener('click', function() {
     budgetValue.textContent = userBudget.toFixed();
     yearInput.value = new Date(Date.parse(userData)).getFullYear();
     monthInput.value = new Date(Date.parse(userData)).getMonth() + 1;
-    dayInput.value = new Date(Date.parse(userData)).getDate();
+    dayInput.value = new Date(Date.parse(userData)).getDay();
     for(let i = 0; i < btn.length; i++) {
         btn[i].disabled = false;
     }
@@ -57,6 +57,12 @@ expensesBtn.addEventListener('click', function() {
 });
 
 
+expensesItem.forEach(function(i) {
+    i.addEventListener('input', function() {
+        expensesBtn.disabled = false;
+    });
+});
+
 optionalExpensesBtn.addEventListener('click', function() {
     for(let i = 0; i < optionalExpensesItem.length; i++) {
         let opt = optionalExpensesItem[i].value;
@@ -65,6 +71,11 @@ optionalExpensesBtn.addEventListener('click', function() {
     }
 });
 
+optionalExpensesItem.forEach(function(i) {
+    i.addEventListener('input', function() {
+        optionalExpensesBtn.disabled = false;
+    });
+});
 
 countBtn.addEventListener('click', function() {
 
