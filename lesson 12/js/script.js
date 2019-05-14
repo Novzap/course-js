@@ -115,106 +115,68 @@ window.addEventListener('DOMContentLoaded', function() {
         failure: 'Что-то пошло не так'
     };
 
-    let form = document.querySelector('.main-form'),
-        input = form.querySelectorAll('input'),
-        statusMessage = document.createElement('div'),
-        formSubmit = document.querySelector('#form'),
-        inputSubmit = formSubmit.querySelectorAll('input');
+    let statusMessage = document.createElement('div');
 
-        statusMessage.classList.add('status');
+    statusMessage.classList.add('status');
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        form.appendChild(statusMessage);
-        let formData = new FormData(form);
-
-        function postData(data) {
-            return new Promise(function(resolve, reject) {
-                let request = new XMLHttpRequest();
-                request.open('POST', 'server.php');
-                request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-
-                request.addEventListener('readystatechange', function() {
-                    if(request.readyState < 4) {
-                        resolve();
-                    } else if(request.readyState === 4 && request.status === 200) {
-                        resolve();
-                    } else {
-                        reject();
-                    }
+    function submitForm(form) {
+        let input = form.querySelectorAll('input');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            form.appendChild(statusMessage);
+            let formData = new FormData(form);
+    
+            function postData(data) {
+                return new Promise(function(resolve, reject) {
+                    let request = new XMLHttpRequest();
+                    request.open('POST', 'server.php');
+                    request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    
+                    request.addEventListener('readystatechange', function() {
+                        if(request.readyState < 4) {
+                            resolve();
+                        } else if(request.readyState === 4 && request.status === 200) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    });
+                    request.send(data);
                 });
-                request.send(data);
+            }
+            function clearInput() {
+                for(let i = 0; i < input.length; i++) {
+                    input[i].value = '';
+                }
+            }
+            let obj = {};
+            formData.forEach((value, key) => {
+                obj[key] = value;
             });
-        }
+            let json = JSON.stringify(obj);
+            postData(json)
+                .then(() => statusMessage.textContent = message.loading)
+                .then(() => {
+                    statusMessage.textContent = message.success;
+                })
+                .catch(() => statusMessage.textContent = message.failure)
+                .then(clearInput)
+        });
         function clearInput() {
-            for(let i = 0; i < inputSubmit.length; i++) {
-                inputSubmit[i].value = '';
+            for(let i = 0; i < input.length; i++) {
+                input[i].value = '';
             }
         }
-        let obj = {};
-        formData.forEach((value, key) => {
-            obj[key] = value;
+        clearInput();
+        input.forEach(function(item) {
+            item.addEventListener('input', function(e) {
+                if(e.data.search(/[0-9\+]/)) {
+                    this.value = '';
+                } 
+            });
         });
-        let json = JSON.stringify(obj);
-        postData(json)
-            .then(() => statusMessage.textContent = message.loading)
-            .then(() => {
-                statusMessage.textContent = message.success;
-            })
-            .catch(() => statusMessage.textContent = message.failure)
-            .then(clearInput)
-    });
-
-
-    formSubmit.addEventListener('submit', function(e) {
-        e.preventDefault();
-        formSubmit.appendChild(statusMessage);
-        let formData = new FormData(formSubmit);
-
-        function postData(data) {
-            return new Promise(function(resolve, reject) {
-                let request = new XMLHttpRequest();
-                request.open('POST', 'server.php');
-                request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-                request.addEventListener('readystatechange', function() {
-                    if(request.readyState < 4) {
-                        resolve();
-                    } else if(request.readyState === 4 && request.status === 200) {
-                        resolve();
-                    } else {
-                        reject();
-                    }
-                });
-                request.send(data);
-            });        
-        }    
-        function clearInput() {
-            for(let i = 0; i < inputSubmit.length; i++) {
-                inputSubmit[i].value = '';
-            }
-        }
-
-
-        let obj = {};
-        formData.forEach((value, key) => {
-            obj[key] = value;
-        });
-
-        let json = JSON.stringify(obj);
-        postData(json)
-            .then(() => statusMessage.textContent = message.loading)
-            .then(() => {
-                statusMessage.textContent = message.success;
-            })
-            .catch(() => statusMessage.textContent = message.failure)
-            .then(clearInput)
-    });
-    input.forEach(function(item) {
-        item.addEventListener('input', function(e) {
-            if(e.data.search(/[0-9\+]/)) {
-                this.value = '';
-            } 
-        });
-    });
-
+    
+    }
+    submitForm(document.querySelector('.main-form'));
+    submitForm(document.querySelector('#form'));
 });

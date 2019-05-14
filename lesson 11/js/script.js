@@ -115,80 +115,53 @@ window.addEventListener('DOMContentLoaded', function() {
         failure: 'Что-то пошло не так'
     };
 
-    let form = document.querySelector('.main-form'),
-        input = form.querySelectorAll('input'),
-        statusMessage = document.createElement('div'),
-        formSubmit = document.querySelector('#form'),
-        inputSubmit = formSubmit.querySelectorAll('input');
+        let statusMessage = document.createElement('div');
 
         statusMessage.classList.add('status');
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        form.appendChild(statusMessage);
 
-        let request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-        request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        let formData = new FormData(form);
-        let obj = {};
-        formData.forEach((value, key) => {
-            obj[key] = value;
-        });
-
-        let json = JSON.stringify(obj);
-        request.send(json);
-
-        request.addEventListener('readystatechange', function() {
-            if(request.readyState < 4) {
-                statusMessage.textContent = message.loading;
-            } else if(request.readyState === 4 && request.status === 200) {
-                statusMessage.textContent = message.success;
-            } else {
-                statusMessage.textContent = message.failure;
-            }
-        });
-
-        for(let i = 0; i < input.length; i++) {
-            input[i].value = '';
-        }
-    });
-    formSubmit.addEventListener('submit', function(e) {
-        e.preventDefault();
-        formSubmit.appendChild(statusMessage);
-
-        let request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-        request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        let formData = new FormData(formSubmit);
+        function submitForm(form) {
+            let input = form.querySelectorAll('input');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                form.appendChild(statusMessage);
+        
+                let request = new XMLHttpRequest();
+                request.open('POST', 'server.php');
+                request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                let formData = new FormData(form);
                 let obj = {};
-        formData.forEach((value, key) => {
-            obj[key] = value;
-        });
-
-        let json = JSON.stringify(obj);
-        request.send(json);
-
-        request.addEventListener('readystatechange', function() {
-            if(request.readyState < 4) {
-                statusMessage.textContent = message.loading;
-            } else if(request.readyState === 4 && request.status === 200) {
-                statusMessage.textContent = message.success;
-            } else {
-                statusMessage.textContent = message.failure;
-            }
-        });
-
-        for(let i = 0; i < inputSubmit.length; i++) {
-            inputSubmit[i].value = '';
+                formData.forEach((value, key) => {
+                    obj[key] = value;
+                });
+        
+                let json = JSON.stringify(obj);
+                request.send(json);
+        
+                request.addEventListener('readystatechange', function() {
+                    if(request.readyState < 4) {
+                        statusMessage.textContent = message.loading;
+                    } else if(request.readyState === 4 && request.status === 200) {
+                        statusMessage.textContent = message.success;
+                    } else {
+                        statusMessage.textContent = message.failure;
+                    }
+                });
+        
+                for(let i = 0; i < input.length; i++) {
+                    input[i].value = '';
+                }
+                input.forEach(function(item) {
+                    item.addEventListener('input', function(e) {
+                        if(e.data.search(/[0-9\+]/)) {
+                            this.value = '';
+                        } 
+                    });
+                });
+            });
         }
-    });
-    input.forEach(function(item) {
-        item.addEventListener('input', function(e) {
-            if(e.data.search(/[0-9\+]/)) {
-                this.value = '';
-            } 
-        });
-    });
+        submitForm(document.querySelector('.main-form'));
+        submitForm(document.querySelector('#form'));
+    
 
 });
