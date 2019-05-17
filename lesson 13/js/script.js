@@ -267,6 +267,27 @@ window.addEventListener('DOMContentLoaded', function() {
                     totalValue.textContent = total;
                 }
             });
+            persons.addEventListener('input', function(e) {
+                if(e.data.search(/[0-9]/)) {
+                    this.value = '';
+                } 
+            });
+            persons.addEventListener('blur', function(e) {
+                if(this.value === '') {
+                    totalValue.textContent = 'Заполните поле';
+                } 
+            });
+            restDays.addEventListener('blur', function(e) {
+                if(this.value === '') {
+                    totalValue.textContent = 'Заполните поле';
+                } 
+            });
+            restDays.addEventListener('input', function(e) {
+                if(e.data.search(/[0-9]/)) {
+                    this.value = '';
+                } 
+            });
+
             place.addEventListener('change', function() {
                 if(restDays.value == '' || persons.value == '') {
                     totalValue.textContent = '0';
@@ -275,4 +296,6 @@ window.addEventListener('DOMContentLoaded', function() {
                     totalValue.textContent = a * this.options[this.selectedIndex.value];
                 }
             });
+
+        
         });
