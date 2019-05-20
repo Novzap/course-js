@@ -5,14 +5,18 @@ function calc() {
     totalValue = document.getElementById('total'),
     personsSum = 0,
     daysSum = 0,
-    total = 0;
+    total = 0,
+    baseCoef = 1;
 
     totalValue.textContent = '0';
 
 
-    persons.addEventListener('change', function(e) {
+    persons.addEventListener('input', function(e) {
+        if(e.data.search(/[0-9]/)) {
+            this.value = '';
+        } 
         personsSum = +this.value;
-        total = (daysSum + personsSum) * 4000;
+        total = (daysSum + personsSum) * 4000 * baseCoef;
 
         if(restDays.value === '') {
             totalValue.textContent = '0';
@@ -21,20 +25,18 @@ function calc() {
         }
     });
 
-    restDays.addEventListener('change', function() {
+    restDays.addEventListener('input', function(e) {
+        if(e.data.search(/[0-9]/)) {
+            this.value = '';
+        } 
         daysSum = +this.value;
-        total = (daysSum + personsSum) * 4000;
+        total = (daysSum + personsSum) * 4000 * baseCoef;
 
         if(persons.value === '') {
             totalValue.textContent = '0';
         } else {
             totalValue.textContent = total;
         }
-    });
-    persons.addEventListener('input', function(e) {
-        if(e.data.search(/[0-9]/)) {
-            this.value = '';
-        } 
     });
     persons.addEventListener('blur', function(e) {
         if(this.value === '') {
@@ -46,18 +48,13 @@ function calc() {
             totalValue.textContent = 'Заполните поле';
         } 
     });
-    restDays.addEventListener('input', function(e) {
-        if(e.data.search(/[0-9]/)) {
-            this.value = '';
-        } 
-    });
 
-    place.addEventListener('change', function() {
+    place.addEventListener('input', function() {
         if(restDays.value == '' || persons.value == '') {
             totalValue.textContent = '0';
         } else {
-            let a = total;
-            totalValue.textContent = a * this.options[this.selectedIndex.value];
+            baseCoef = +this.options[this.selectedIndex].value;
+            totalValue.textContent = (daysSum + personsSum) * 4000 * baseCoef;
         }
     });
 }

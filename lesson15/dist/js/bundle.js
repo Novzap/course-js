@@ -94,67 +94,61 @@
 /***/ (function(module, exports) {
 
 function calc() {
-    let persons = document.querySelectorAll('.counter-block-input')[0],
-    restDays = document.querySelectorAll('.counter-block-input')[1],
-    place = document.getElementById('select'),
-    totalValue = document.getElementById('total'),
-    personsSum = 0,
-    daysSum = 0,
-    total = 0;
+  var persons = document.querySelectorAll('.counter-block-input')[0],
+      restDays = document.querySelectorAll('.counter-block-input')[1],
+      place = document.getElementById('select'),
+      totalValue = document.getElementById('total'),
+      personsSum = 0,
+      daysSum = 0,
+      total = 0,
+      baseCoef = 1;
+  totalValue.textContent = '0';
+  persons.addEventListener('input', function (e) {
+    if (e.data.search(/[0-9]/)) {
+      this.value = '';
+    }
 
-    totalValue.textContent = '0';
+    personsSum = +this.value;
+    total = (daysSum + personsSum) * 4000 * baseCoef;
 
+    if (restDays.value === '') {
+      totalValue.textContent = '0';
+    } else {
+      totalValue.textContent = total;
+    }
+  });
+  restDays.addEventListener('input', function (e) {
+    if (e.data.search(/[0-9]/)) {
+      this.value = '';
+    }
 
-    persons.addEventListener('change', function(e) {
-        personsSum = +this.value;
-        total = (daysSum + personsSum) * 4000;
+    daysSum = +this.value;
+    total = (daysSum + personsSum) * 4000 * baseCoef;
 
-        if(restDays.value === '') {
-            totalValue.textContent = '0';
-        } else {
-            totalValue.textContent = total;
-        }
-    });
-
-    restDays.addEventListener('change', function() {
-        daysSum = +this.value;
-        total = (daysSum + personsSum) * 4000;
-
-        if(persons.value === '') {
-            totalValue.textContent = '0';
-        } else {
-            totalValue.textContent = total;
-        }
-    });
-    persons.addEventListener('input', function(e) {
-        if(e.data.search(/[0-9]/)) {
-            this.value = '';
-        } 
-    });
-    persons.addEventListener('blur', function(e) {
-        if(this.value === '') {
-            totalValue.textContent = 'Заполните поле';
-        } 
-    });
-    restDays.addEventListener('blur', function(e) {
-        if(this.value === '') {
-            totalValue.textContent = 'Заполните поле';
-        } 
-    });
-    restDays.addEventListener('input', function(e) {
-        if(e.data.search(/[0-9]/)) {
-            this.value = '';
-        } 
-    });
-
-    place.addEventListener('change', function() {
-        if(restDays.value == '' || persons.value == '') {
-            totalValue.textContent = '0';
-        } else {
-            let a = total;
-            totalValue.textContent = a * this.options[this.selectedIndex.value];
-        }
-    });
+    if (persons.value === '') {
+      totalValue.textContent = '0';
+    } else {
+      totalValue.textContent = total;
+    }
+  });
+  persons.addEventListener('blur', function (e) {
+    if (this.value === '') {
+      totalValue.textContent = 'Заполните поле';
+    }
+  });
+  restDays.addEventListener('blur', function (e) {
+    if (this.value === '') {
+      totalValue.textContent = 'Заполните поле';
+    }
+  });
+  place.addEventListener('input', function () {
+    if (restDays.value == '' || persons.value == '') {
+      totalValue.textContent = '0';
+    } else {
+      baseCoef = +this.options[this.selectedIndex].value;
+      totalValue.textContent = (daysSum + personsSum) * 4000 * baseCoef;
+    }
+  });
 }
 
 module.exports = calc;
@@ -169,78 +163,78 @@ module.exports = calc;
 /***/ (function(module, exports) {
 
 function form() {
-    // Form
-
-let message = {
+  // Form
+  var message = {
     loading: 'Загрузка...',
     success: 'Спасибо! Скоро мы с вами свяжемся',
     failure: 'Что-то пошло не так'
-};
+  };
+  var statusMessage = document.createElement('div');
+  statusMessage.classList.add('status');
 
-let statusMessage = document.createElement('div');
+  function submitForm(form) {
+    var input = form.querySelectorAll('input');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      form.appendChild(statusMessage);
+      var formData = new FormData(form);
 
-statusMessage.classList.add('status');
-
-function submitForm(form) {
-    let input = form.querySelectorAll('input');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        form.appendChild(statusMessage);
-        let formData = new FormData(form);
-
-        function postData(data) {
-            return new Promise(function(resolve, reject) {
-                let request = new XMLHttpRequest();
-                request.open('POST', 'server.php');
-                request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-
-                request.addEventListener('readystatechange', function() {
-                    if(request.readyState < 4) {
-                        resolve();
-                    } else if(request.readyState === 4 && request.status === 200) {
-                        resolve();
-                    } else {
-                        reject();
-                    }
-                });
-                request.send(data);
-            });
-        }
-        function clearInput() {
-            for(let i = 0; i < input.length; i++) {
-                input[i].value = '';
+      function postData(data) {
+        return new Promise(function (resolve, reject) {
+          var request = new XMLHttpRequest();
+          request.open('POST', 'server.php');
+          request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+          request.addEventListener('readystatechange', function () {
+            if (request.readyState < 4) {
+              resolve();
+            } else if (request.readyState === 4 && request.status === 200) {
+              resolve();
+            } else {
+              reject();
             }
-        }
-        let obj = {};
-        formData.forEach((value, key) => {
-            obj[key] = value;
+          });
+          request.send(data);
         });
-        let json = JSON.stringify(obj);
-        postData(json)
-            .then(() => statusMessage.textContent = message.loading)
-            .then(() => {
-                statusMessage.textContent = message.success;
-            })
-            .catch(() => statusMessage.textContent = message.failure)
-            .then(clearInput)
-    });
-    function clearInput() {
-        for(let i = 0; i < input.length; i++) {
-            input[i].value = '';
+      }
+
+      function clearInput() {
+        for (var i = 0; i < input.length; i++) {
+          input[i].value = '';
         }
-    }
-    clearInput();
-    input.forEach(function(item) {
-        item.addEventListener('input', function(e) {
-            if(e.data.search(/[0-9\+]/)) {
-                this.value = '';
-            } 
-        });
+      }
+
+      var obj = {};
+      formData.forEach(function (value, key) {
+        obj[key] = value;
+      });
+      var json = JSON.stringify(obj);
+      postData(json).then(function () {
+        return statusMessage.textContent = message.loading;
+      }).then(function () {
+        statusMessage.textContent = message.success;
+      }).catch(function () {
+        return statusMessage.textContent = message.failure;
+      }).then(clearInput);
     });
 
-}
-submitForm(document.querySelector('.main-form'));
-submitForm(document.querySelector('#form'));
+    function clearInput() {
+      for (var i = 0; i < input.length; i++) {
+        input[i].value = '';
+      }
+    }
+
+    clearInput();
+    input.forEach(function (item) {
+      item.addEventListener('input', function (e) {
+        if (e.data.search(/[0-9\+]/)) {
+          this.value = '';
+        }
+      });
+    });
+  }
+
+  submitForm(document.querySelector('.main-form'));
+  submitForm(document.querySelector('#form'));
 }
 
 module.exports = form;
@@ -255,30 +249,29 @@ module.exports = form;
 /***/ (function(module, exports) {
 
 function modal() {
-    let more = document.querySelector('.more'),
-    btns = document.querySelectorAll('.description-btn'),
-    overlay = document.querySelector('.overlay'),
-    close = document.querySelector('.popup-close');
+  var more = document.querySelector('.more'),
+      btns = document.querySelectorAll('.description-btn'),
+      overlay = document.querySelector('.overlay'),
+      close = document.querySelector('.popup-close');
 
-function showOrNone(display, cl, overflow) {
+  function showOrNone(display, cl, overflow) {
     overlay.style.display = display;
     this.classList.add(cl);
     document.body.style.overflow = overflow;
-};
+  }
 
-more.addEventListener('click', function() {
+  ;
+  more.addEventListener('click', function () {
     showOrNone.call(more, 'block', 'more-splash', 'hidden');
-});
-
-close.addEventListener('click', function() {
+  });
+  close.addEventListener('click', function () {
     showOrNone.call(close, 'none', 'more-splash', 'visible');
-});
-
-btns.forEach((item) => {
-    item.addEventListener('click', function() {
-        showOrNone.call(item, 'block', 'more-splash', 'hidden');
+  });
+  btns.forEach(function (item) {
+    item.addEventListener('click', function () {
+      showOrNone.call(item, 'block', 'more-splash', 'hidden');
     });
-});
+  });
 }
 
 module.exports = modal;
@@ -293,52 +286,54 @@ module.exports = modal;
 /***/ (function(module, exports) {
 
 function slider() {
-    let slideIndex = 1,
-        slides = document.querySelectorAll('.slider-item'),
-        prev = document.querySelector('.prev'),
-        next = document.querySelector('.next'),
-        dotsWrap = document.querySelector('.slider-dots'),
-        dots = document.querySelectorAll('.dot');
+  var slideIndex = 1,
+      slides = document.querySelectorAll('.slider-item'),
+      prev = document.querySelector('.prev'),
+      next = document.querySelector('.next'),
+      dotsWrap = document.querySelector('.slider-dots'),
+      dots = document.querySelectorAll('.dot');
+  showSlides(slideIndex);
 
-        showSlides(slideIndex);
-        function showSlides(n) {
+  function showSlides(n) {
+    if (n > slides.length) {
+      slideIndex = 1;
+    }
 
-            if(n > slides.length) {
-                slideIndex = 1;
-            }
-            if(n < 1) {
-                slideIndex = slides.length;
-            }
+    if (n < 1) {
+      slideIndex = slides.length;
+    }
 
-            slides.forEach((item) => item.style.display = 'none');
+    slides.forEach(function (item) {
+      return item.style.display = 'none';
+    });
+    dots.forEach(function (item) {
+      return item.classList.remove('dot-active');
+    });
+    slides[slideIndex - 1].style.display = 'block';
+    dots[slideIndex - 1].classList.add('dot-active');
+  }
 
-            dots.forEach((item) => item.classList.remove('dot-active'));
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
 
-            slides[slideIndex - 1].style.display = 'block';
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
 
-            dots[slideIndex - 1].classList.add('dot-active');
-        }
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-        }
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-        }
-
-        prev.addEventListener('click', () => {
-           plusSlides(-1); 
-        });
-        next.addEventListener('click', () => {
-            plusSlides(1); 
-         });
-
-         dotsWrap.addEventListener('click', (e) => {
-            for(let i = 0; i < dots.length + 1; i++) {
-                if(event.target.classList.contains('dot') && event.target === dots[i - 1]) {
-                    currentSlide(i);
-                }
-            }
-         });
+  prev.addEventListener('click', function () {
+    plusSlides(-1);
+  });
+  next.addEventListener('click', function () {
+    plusSlides(1);
+  });
+  dotsWrap.addEventListener('click', function (e) {
+    for (var i = 0; i < dots.length + 1; i++) {
+      if (event.target.classList.contains('dot') && event.target === dots[i - 1]) {
+        currentSlide(i);
+      }
+    }
+  });
 }
 
 module.exports = slider;
@@ -353,37 +348,38 @@ module.exports = slider;
 /***/ (function(module, exports) {
 
 function tabs() {
-    let info = document.querySelector('.info-header'),
-    tab = document.querySelectorAll('.info-header-tab'),
-    tabContent = document.querySelectorAll('.info-tabcontent');
+  var info = document.querySelector('.info-header'),
+      tab = document.querySelectorAll('.info-header-tab'),
+      tabContent = document.querySelectorAll('.info-tabcontent');
 
-let hideTabContent = (a) => {
-    for(let i = a; i < tabContent.length; i++) {
-        tabContent[i].classList.remove('show');
-        tabContent[i].classList.add('hide');
+  var hideTabContent = function hideTabContent(a) {
+    for (var i = a; i < tabContent.length; i++) {
+      tabContent[i].classList.remove('show');
+      tabContent[i].classList.add('hide');
     }
-};
+  };
 
-hideTabContent(1);
+  hideTabContent(1);
 
-let showTabContent = (b) => {
+  var showTabContent = function showTabContent(b) {
     if (tabContent[b].classList.contains('hide')) {
-        tabContent[b].classList.remove('hide');
-        tabContent[b].classList.add('show');
+      tabContent[b].classList.remove('hide');
+      tabContent[b].classList.add('show');
     }
-};
+  };
 
-info.addEventListener('click', function(e) {
-    let target = e.target;
+  info.addEventListener('click', function (e) {
+    var target = e.target;
+
     if (target && target.matches('div.info-header-tab')) {
-        for(let i = 0; i < tab.length; i++) {
-            if(target == tab[i]) {
-                hideTabContent(0);
-                showTabContent(i);
-            }
+      for (var i = 0; i < tab.length; i++) {
+        if (target == tab[i]) {
+          hideTabContent(0);
+          showTabContent(i);
         }
+      }
     }
-});
+  });
 }
 
 module.exports = tabs;
@@ -398,48 +394,51 @@ module.exports = tabs;
 /***/ (function(module, exports) {
 
 function timer() {
-    let deadline = '2019-05-14';
-    let getTimeRemaining = (endTime) => {
-        let t = Date.parse(endTime) - (Date.parse(new Date()) + ((new Date().getTimezoneOffset()) * 60 * 1000)),
-            seconds = Math.floor((t/1000) % 60),
-            minutes = Math.floor((t/1000/60) % 60),
-            hours = Math.floor((t/(1000*60*60)));
-            return {
-                'total': t,
-                'hours': hours,
-                'minutes': minutes,
-                'seconds': seconds
-            };
-    }
+  var deadline = '2019-05-14';
 
-    let setClock = (id, endTime) => {
-        let timer = document.getElementById(id),
-            hours = timer.querySelector('.hours'),
-            minutes = timer.querySelector('.minutes'),
-            seconds = timer.querySelector('.seconds'),
-            timeInterval = setInterval(updateClock, 1000);
-        function updateClock() {
-            let t = getTimeRemaining(endTime);
-            if(t.hours < 10) {
-                hours.textContent = `0${t.hours}`;
-            } else if(t.minutes < 10) {
-                minutes.textContent = `0${t.minutes}`;
-            } else if(t.seconds < 10) {
-                seconds.textContent = `0${t.seconds}`;
-            }
-            hours.textContent = t.hours;
-            minutes.textContent = t.minutes;
-            seconds.textContent = t.seconds;
-
-            if(t.total <= 0) {
-                clearInterval(timeInterval);
-                hours.textContent = '00',
-                minutes.textContent = '00',
-                seconds.textContent = '00';
-            }
-        }
+  var getTimeRemaining = function getTimeRemaining(endTime) {
+    var t = Date.parse(endTime) - (Date.parse(new Date()) + new Date().getTimezoneOffset() * 60 * 1000),
+        seconds = Math.floor(t / 1000 % 60),
+        minutes = Math.floor(t / 1000 / 60 % 60),
+        hours = Math.floor(t / (1000 * 60 * 60));
+    return {
+      'total': t,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
     };
-    setClock('timer', deadline);
+  };
+
+  var setClock = function setClock(id, endTime) {
+    var timer = document.getElementById(id),
+        hours = timer.querySelector('.hours'),
+        minutes = timer.querySelector('.minutes'),
+        seconds = timer.querySelector('.seconds'),
+        timeInterval = setInterval(updateClock, 1000);
+
+    function updateClock() {
+      var t = getTimeRemaining(endTime);
+
+      if (t.hours < 10) {
+        hours.textContent = "0".concat(t.hours);
+      } else if (t.minutes < 10) {
+        minutes.textContent = "0".concat(t.minutes);
+      } else if (t.seconds < 10) {
+        seconds.textContent = "0".concat(t.seconds);
+      }
+
+      hours.textContent = t.hours;
+      minutes.textContent = t.minutes;
+      seconds.textContent = t.seconds;
+
+      if (t.total <= 0) {
+        clearInterval(timeInterval);
+        hours.textContent = '00', minutes.textContent = '00', seconds.textContent = '00';
+      }
+    }
+  };
+
+  setClock('timer', deadline);
 }
 
 module.exports = timer;
@@ -453,26 +452,30 @@ module.exports = timer;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-window.addEventListener('DOMContentLoaded', function() {
-    "use strict";
+window.addEventListener('DOMContentLoaded', function () {
+  "use strict";
 
-    let tabs = __webpack_require__(/*! ./parts/tabs.js */ "./src/js/parts/tabs.js");
-    let timer = __webpack_require__(/*! ./parts/timer.js */ "./src/js/parts/timer.js");
-    let modal = __webpack_require__(/*! ./parts/modal.js */ "./src/js/parts/modal.js");
-    let form = __webpack_require__(/*! ./parts/form.js */ "./src/js/parts/form.js");
-    let slider = __webpack_require__(/*! ./parts/slider.js */ "./src/js/parts/slider.js");
-    let calc = __webpack_require__(/*! ./parts/calc.js */ "./src/js/parts/calc.js");
-    
-    tabs();
-    timer();
-    modal();
-    form();
-    slider();
-    calc();
-       
+  var tabs = __webpack_require__(/*! ./parts/tabs.js */ "./src/js/parts/tabs.js");
+
+  var timer = __webpack_require__(/*! ./parts/timer.js */ "./src/js/parts/timer.js");
+
+  var modal = __webpack_require__(/*! ./parts/modal.js */ "./src/js/parts/modal.js");
+
+  var form = __webpack_require__(/*! ./parts/form.js */ "./src/js/parts/form.js");
+
+  var slider = __webpack_require__(/*! ./parts/slider.js */ "./src/js/parts/slider.js");
+
+  var calc = __webpack_require__(/*! ./parts/calc.js */ "./src/js/parts/calc.js");
+
+  tabs();
+  timer();
+  modal();
+  form();
+  slider();
+  calc();
 });
-
 
 /***/ })
 
 /******/ });
+//# sourceMappingURL=bundle.js.map
