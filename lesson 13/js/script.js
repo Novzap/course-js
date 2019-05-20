@@ -246,7 +246,10 @@ window.addEventListener('DOMContentLoaded', function() {
             totalValue.textContent = '0';
         
 
-            persons.addEventListener('change', function(e) {
+            persons.addEventListener('input', function(e) {
+                if(e.data.search(/[0-9]/)) {
+                    this.value = '';
+                } 
                 personsSum = +this.value;
                 total = (daysSum + personsSum) * 4000;
 
@@ -257,7 +260,10 @@ window.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            restDays.addEventListener('change', function() {
+            restDays.addEventListener('input', function(e) {
+                if(e.data.search(/[0-9]/)) {
+                    this.value = '';
+                } 
                 daysSum = +this.value;
                 total = (daysSum + personsSum) * 4000;
 
@@ -266,11 +272,6 @@ window.addEventListener('DOMContentLoaded', function() {
                 } else {
                     totalValue.textContent = total;
                 }
-            });
-            persons.addEventListener('input', function(e) {
-                if(e.data.search(/[0-9]/)) {
-                    this.value = '';
-                } 
             });
             persons.addEventListener('blur', function(e) {
                 if(this.value === '') {
@@ -282,13 +283,8 @@ window.addEventListener('DOMContentLoaded', function() {
                     totalValue.textContent = 'Заполните поле';
                 } 
             });
-            restDays.addEventListener('input', function(e) {
-                if(e.data.search(/[0-9]/)) {
-                    this.value = '';
-                } 
-            });
 
-            place.addEventListener('change', function() {
+            place.addEventListener('input', function() {
                 if(restDays.value == '' || persons.value == '') {
                     totalValue.textContent = '0';
                 } else {
