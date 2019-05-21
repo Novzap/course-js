@@ -21,6 +21,9 @@ const timer = () => {
             timeInterval = setInterval(updateClock, 1000);
         function updateClock() {
             let t = getTimeRemaining(endTime);
+            hours.textContent = t.hours;
+            minutes.textContent = t.minutes;
+            seconds.textContent = t.seconds;
             if(t.hours < 10) {
                 hours.textContent = `0${t.hours}`;
             } else if(t.minutes < 10) {
@@ -28,9 +31,6 @@ const timer = () => {
             } else if(t.seconds < 10) {
                 seconds.textContent = `0${t.seconds}`;
             }
-            hours.textContent = t.hours;
-            minutes.textContent = t.minutes;
-            seconds.textContent = t.seconds;
 
             if(t.total <= 0) {
                 clearInterval(timeInterval);
