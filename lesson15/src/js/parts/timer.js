@@ -1,4 +1,4 @@
-function timer() {
+const timer = () => {
     let deadline = '2019-05-14';
     let getTimeRemaining = (endTime) => {
         let t = Date.parse(endTime) - (Date.parse(new Date()) + ((new Date().getTimezoneOffset()) * 60 * 1000)),

@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function calc() {
+var calc = function calc() {
   var persons = document.querySelectorAll('.counter-block-input')[0],
       restDays = document.querySelectorAll('.counter-block-input')[1],
       place = document.getElementById('select'),
@@ -111,7 +111,12 @@ function calc() {
     personsSum = +this.value;
     total = (daysSum + personsSum) * 4000 * baseCoef;
 
-    if (restDays.value === '') {
+    if (this.value.charAt(0) === '0') {
+      this.value = '';
+      total = 0;
+    }
+
+    if (restDays.value === '' || restDays.value === '0') {
       totalValue.textContent = '0';
     } else {
       totalValue.textContent = total;
@@ -125,7 +130,12 @@ function calc() {
     daysSum = +this.value;
     total = (daysSum + personsSum) * 4000 * baseCoef;
 
-    if (persons.value === '') {
+    if (this.value.charAt(0) === '0') {
+      this.value = '';
+      total = 0;
+    }
+
+    if (persons.value === '' || persons.value === '0') {
       totalValue.textContent = '0';
     } else {
       totalValue.textContent = total;
@@ -149,7 +159,7 @@ function calc() {
       totalValue.textContent = (daysSum + personsSum) * 4000 * baseCoef;
     }
   });
-}
+};
 
 module.exports = calc;
 
@@ -162,7 +172,7 @@ module.exports = calc;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function form() {
+var form = function form() {
   // Form
   var message = {
     loading: 'Загрузка...',
@@ -226,16 +236,18 @@ function form() {
     clearInput();
     input.forEach(function (item) {
       item.addEventListener('input', function (e) {
-        if (e.data.search(/[0-9\+]/)) {
-          this.value = '';
+        if (item.name !== 'email') {
+          if (e.data.search(/[0-9\+]/)) {
+            this.value = '';
+          }
         }
       });
     });
   }
 
-  submitForm(document.querySelector('.main-form'));
   submitForm(document.querySelector('#form'));
-}
+  submitForm(document.querySelector('.main-form'));
+};
 
 module.exports = form;
 
@@ -248,7 +260,7 @@ module.exports = form;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function modal() {
+var modal = function modal() {
   var more = document.querySelector('.more'),
       btns = document.querySelectorAll('.description-btn'),
       overlay = document.querySelector('.overlay'),
@@ -272,7 +284,7 @@ function modal() {
       showOrNone.call(item, 'block', 'more-splash', 'hidden');
     });
   });
-}
+};
 
 module.exports = modal;
 
@@ -285,7 +297,7 @@ module.exports = modal;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function slider() {
+var slider = function slider() {
   var slideIndex = 1,
       slides = document.querySelectorAll('.slider-item'),
       prev = document.querySelector('.prev'),
@@ -334,7 +346,7 @@ function slider() {
       }
     }
   });
-}
+};
 
 module.exports = slider;
 
@@ -347,7 +359,7 @@ module.exports = slider;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function tabs() {
+var tabs = function tabs() {
   var info = document.querySelector('.info-header'),
       tab = document.querySelectorAll('.info-header-tab'),
       tabContent = document.querySelectorAll('.info-tabcontent');
@@ -380,7 +392,7 @@ function tabs() {
       }
     }
   });
-}
+};
 
 module.exports = tabs;
 
@@ -393,7 +405,7 @@ module.exports = tabs;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function timer() {
+var timer = function timer() {
   var deadline = '2019-05-14';
 
   var getTimeRemaining = function getTimeRemaining(endTime) {
@@ -439,7 +451,7 @@ function timer() {
   };
 
   setClock('timer', deadline);
-}
+};
 
 module.exports = timer;
 

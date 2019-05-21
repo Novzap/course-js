@@ -1,4 +1,4 @@
-function tabs() {
+const tabs = () => {
     let info = document.querySelector('.info-header'),
     tab = document.querySelectorAll('.info-header-tab'),
     tabContent = document.querySelectorAll('.info-tabcontent');

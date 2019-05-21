@@ -1,4 +1,4 @@
-function modal() {
+const modal = () => {
     let more = document.querySelector('.more'),
     btns = document.querySelectorAll('.description-btn'),
     overlay = document.querySelector('.overlay'),

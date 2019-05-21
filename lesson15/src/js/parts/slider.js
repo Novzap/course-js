@@ -1,4 +1,4 @@
-function slider() {
+const slider = () => {
     let slideIndex = 1,
         slides = document.querySelectorAll('.slider-item'),
         prev = document.querySelector('.prev'),

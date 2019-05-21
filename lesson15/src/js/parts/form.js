@@ -1,4 +1,4 @@
-function form() {
+const form =() => {
     // Form
 
 let message = {
@@ -62,15 +62,20 @@ function submitForm(form) {
     clearInput();
     input.forEach(function(item) {
         item.addEventListener('input', function(e) {
-            if(e.data.search(/[0-9\+]/)) {
-                this.value = '';
-            } 
+            if(item.name !== 'email') {
+                if(e.data.search(/[0-9\+]/)) {
+                    this.value = '';
+                }
+            }
         });
     });
 
+
+
 }
-submitForm(document.querySelector('.main-form'));
 submitForm(document.querySelector('#form'));
-}
+submitForm(document.querySelector('.main-form'));
+
+};
 
 module.exports = form;
