@@ -430,6 +430,9 @@ var timer = function timer() {
 
     function updateClock() {
       var t = getTimeRemaining(endTime);
+      hours.textContent = t.hours;
+      minutes.textContent = t.minutes;
+      seconds.textContent = t.seconds;
 
       if (t.hours < 10) {
         hours.textContent = "0".concat(t.hours);
@@ -438,10 +441,6 @@ var timer = function timer() {
       } else if (t.seconds < 10) {
         seconds.textContent = "0".concat(t.seconds);
       }
-
-      hours.textContent = t.hours;
-      minutes.textContent = t.minutes;
-      seconds.textContent = t.seconds;
 
       if (t.total <= 0) {
         clearInterval(timeInterval);
